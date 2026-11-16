@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>GPA</title>
+<link href="https://fonts.googleapis.com/css2?family=Readex+Pro:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#FBF3EE; --ink:#2B1B3D; --muted:#7A6A87; --glass:rgba(255,255,255,.62); --edge:rgba(120,80,150,.18);
+  --a1:#FF7A59; --a2:#B05CF0; --a3:#4CC9F0; --field:rgba(255,255,255,.75); --shadow:0 20px 50px -20px rgba(120,60,160,.35);
+  --blob1:#FFC2A8; --blob2:#D9B8FF; --blob3:#B5ECFF;
+  color-scheme:light; box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px); padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --bg:#0E0A1F; --ink:#F3ECFF; --muted:#A596C2; --glass:rgba(34,24,66,.55); --edge:rgba(190,160,255,.18);
+    --a1:#FF8A6B; --a2:#B67BFF; --a3:#5AD7FF; --field:rgba(14,10,31,.55); --shadow:0 24px 60px -24px rgba(0,0,0,.8);
+    --blob1:#7A2E6B; --blob2:#3B2A9B; --blob3:#0E5E7A; color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0E0A1F; --ink:#F3ECFF; --muted:#A596C2; --glass:rgba(34,24,66,.55); --edge:rgba(190,160,255,.18);
+  --a1:#FF8A6B; --a2:#B67BFF; --a3:#5AD7FF; --field:rgba(14,10,31,.55); --shadow:0 24px 60px -24px rgba(0,0,0,.8);
+  --blob1:#7A2E6B; --blob2:#3B2A9B; --blob3:#0E5E7A; color-scheme:dark;
+}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+body{margin:0; min-height:100vh; background:var(--bg); color:var(--ink);
+  font-family:"Readex Pro",Tahoma,"Segoe UI",system-ui,sans-serif; line-height:1.6; transition:background .4s,color .4s}
+.sky{position:fixed; inset:0; z-index:-1; overflow:hidden; pointer-events:none}
+.sky i{position:absolute; border-radius:50%; filter:blur(70px); opacity:.85}
+.sky i:nth-child(1){width:46vmax;height:46vmax;background:var(--blob1);top:-14vmax;inset-inline-start:-10vmax;animation:d1 22s ease-in-out infinite alternate}
+.sky i:nth-child(2){width:40vmax;height:40vmax;background:var(--blob2);bottom:-12vmax;inset-inline-end:-8vmax;animation:d2 26s ease-in-out infinite alternate}
+.sky i:nth-child(3){width:28vmax;height:28vmax;background:var(--blob3);top:40%;inset-inline-start:45%;animation:d1 30s ease-in-out infinite alternate-reverse}
+@keyframes d1{to{transform:translate(8vmax,6vmax) scale(1.15)}}
+@keyframes d2{to{transform:translate(-7vmax,-8vmax) scale(1.1)}}
+
+main{max-width:760px; margin:0 auto; padding:20px 16px 64px}
+header{display:flex; justify-content:space-between; align-items:center; gap:12px; margin-bottom:22px; flex-wrap:wrap}
+h1{margin:0; font-size:1.6rem; font-weight:700; letter-spacing:-.01em}
+h1 span{background:linear-gradient(90deg,var(--a1),var(--a2)); -webkit-background-clip:text; background-clip:text; color:transparent}
+.tools{display:flex; gap:8px}
+.pill{border:1px solid var(--edge); background:var(--glass); color:var(--ink); backdrop-filter:blur(14px); -webkit-backdrop-filter:blur(14px);
+  border-radius:999px; padding:8px 16px; font:inherit; font-size:.9rem; cursor:pointer; display:inline-flex; gap:8px; align-items:center}
+.pill:hover{border-color:var(--a2)}
+button:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid var(--a3); outline-offset:2px}
+
+.card{background:var(--glass); border:1px solid var(--edge); border-radius:28px; box-shadow:var(--shadow);
+  backdrop-filter:blur(18px); -webkit-backdrop-filter:blur(18px)}
+.hero{display:flex; align-items:center; gap:28px; padding:28px; margin-bottom:18px; flex-wrap:wrap; justify-content:center}
+.ring{position:relative; width:220px; height:220px; flex:none}
+.ring svg{width:100%; height:100%; transform:rotate(-90deg)}
+.ring .tr{stroke:var(--edge); fill:none; stroke-width:14}
+.ring .pg{fill:none; stroke:url(#g); stroke-width:14; stroke-linecap:round; stroke-dasharray:565.5; stroke-dashoffset:565.5;
+  transition:stroke-dashoffset 1.1s cubic-bezier(.2,.8,.2,1); filter:drop-shadow(0 0 10px var(--a2))}
+.ring .num{position:absolute; inset:0; display:grid; place-content:center; text-align:center}
+.num b{font-size:3.6rem; font-weight:700; line-height:1; font-variant-numeric:tabular-nums;
+  background:linear-gradient(135deg,var(--a1),var(--a2)); -webkit-background-clip:text; background-clip:text; color:transparent}
+.num small{color:var(--muted); font-size:.9rem; margin-top:4px}
+.stats{flex:1; min-width:200px; display:grid; gap:10px}
+.stat{display:flex; justify-content:space-between; padding:10px 16px; border-radius:16px; background:var(--field); border:1px solid var(--edge)}
+.stat span{color:var(--muted)} .stat b{font-variant-numeric:tabular-nums}
+.verdict{font-size:1.25rem; font-weight:500; text-align:center; min-height:1.9rem}
+
+.panel{padding:22px}
+.top{display:flex; justify-content:space-between; align-items:center; gap:10px; margin-bottom:14px; flex-wrap:wrap}
+.top h2{margin:0; font-size:1.1rem}
+.seg{display:inline-flex; background:var(--field); border:1px solid var(--edge); border-radius:999px; padding:3px}
+.seg button{border:0; background:transparent; color:var(--muted); border-radius:999px; padding:6px 16px; font:inherit; cursor:pointer}
+.seg button[aria-pressed="true"]{background:linear-gradient(135deg,var(--a1),var(--a2)); color:#fff; font-weight:500}
+
+.row{--gc:var(--a2); display:grid; grid-template-columns:1fr 76px 92px 38px; gap:8px; align-items:center;
+  padding:8px 8px; margin-bottom:8px; border-radius:18px; background:var(--field); border:1px solid var(--edge);
+  border-inline-start:5px solid var(--gc); animation:in .35s ease both}
+@keyframes in{from{opacity:0; transform:translateY(8px)}}
+input,select{width:100%; min-width:0; font:inherit; color:var(--ink); background:transparent; border:1px solid transparent; border-radius:12px; padding:9px 10px}
+input:hover,select:hover{border-color:var(--edge)}
+input[type=number]{text-align:center}
+select{cursor:pointer; font-weight:700; color:var(--gc)}
+select option{color:#222}
+.del{width:38px; height:38px; border:0; border-radius:50%; background:transparent; color:var(--muted); font-size:1.3rem; cursor:pointer}
+.del:hover{background:var(--edge); color:var(--ink)}
+.cols{display:grid; grid-template-columns:1fr 76px 92px 38px; gap:8px; padding:0 14px 6px; color:var(--muted); font-size:.82rem}
+.empty{text-align:center; color:var(--muted); padding:22px 0}
+.actions{display:flex; gap:10px; margin-top:14px; flex-wrap:wrap}
+.btn{border:0; border-radius:999px; padding:12px 24px; font:inherit; font-weight:500; cursor:pointer; color:#fff;
+  background:linear-gradient(135deg,var(--a1),var(--a2)); box-shadow:0 10px 24px -10px var(--a2)}
+.btn.ghost{background:transparent; color:var(--ink); border:1px solid var(--edge); box-shadow:none}
+@media (max-width:520px){
+  .row,.cols{grid-template-columns:1fr 58px 78px 34px; gap:4px}
+  .ring{width:190px; height:190px} .num b{font-size:3rem} .hero{padding:22px 16px}
+}
+@media (prefers-reduced-motion:reduce){.sky i,.row{animation:none} .ring .pg{transition:none}}
+</style>
+</head>
+<body>
+<div class="sky" aria-hidden="true"><i></i><i></i><i></i></div>
+<main>
+  <header>
+    <h1><span id="t-title"></span></h1>
+    <div class="tools">
+      <button class="pill" id="lang" type="button"></button>
+      <button class="pill" id="theme" type="button"></button>
+    </div>
+  </header>
+
+  <section class="card hero" aria-live="polite">
+    <div class="ring">
+      <svg viewBox="0 0 200 200" aria-hidden="true">
+        <defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0" style="stop-color:var(--a1)"/><stop offset=".55" style="stop-color:var(--a2)"/><stop offset="1" style="stop-color:var(--a3)"/>
+        </linearGradient></defs>
+        <circle class="tr" cx="100" cy="100" r="90"/>
+        <circle class="pg" id="pg" cx="100" cy="100" r="90"/>
+      </svg>
+      <div class="num"><b id="gpa">0.00</b><small id="outof"></small></div>
+    </div>
+    <div class="stats">
+      <div class="verdict" id="verdict"></div>
+      <div class="stat"><span id="t-hours"></span><b id="hours">0</b></div>
+      <div class="stat"><span id="t-count"></span><b id="count">0</b></div>
+    </div>
+  </section>
+
+  <section class="card panel">
+    <div class="top">
+      <h2 id="t-subjects"></h2>
+      <div class="seg" role="group">
+        <button type="button" data-max="4" aria-pressed="true">4.0</button>
+        <button type="button" data-max="5" aria-pressed="false">5.0</button>
+      </div>
+    </div>
+    <div class="cols" aria-hidden="true"><span id="c-name"></span><span id="c-hrs"></span><span id="c-grade"></span><span></span></div>
+    <div id="rows"></div>
+    <div class="actions">
+      <button class="btn" id="add" type="button"></button>
+      <button class="btn ghost" id="reset" type="button"></button>
+    </div>
+  </section>
+</main>
+
+<script>
+(function(){
+  var GR=["A+","A","B+","B","C+","C","D+","D","F"];
+  var GC=["#2FD19A","#4BD67A","#9ADB4B","#E3D13C","#F5B03B","#FF8F3C","#FF6B4A","#F0476B","#D63384"];
+  var PT={4:{"A+":4,"A":3.75,"B+":3.5,"B":3,"C+":2.5,"C":2,"D+":1.5,"D":1,"F":0},
+          5:{"A+":5,"A":4.75,"B+":4.5,"B":4,"C+":3.5,"C":3,"D+":2.5,"D":2,"F":1}};
+  var T={
+    ar:{title:"حاسبة المعدل",subjects:"موادي",hours:"إجمالي الساعات",count:"عدد المواد",course:"اسم المادة",hrs:"الساعات",grade:"التقدير",
+        add:"إضافة مادة",reset:"مسح الكل",of:"من ",empty:"لا توجد مواد بعد. أضف مادتك الأولى وابدأ.",del:"حذف",
+        v:["ممتاز، واصل!","جيد جدًا","جيد","مقبول","تحتاج إلى دفعة"],none:"أضف موادك لترى معدلك",
+        lang:"English",dark:"داكن",light:"فاتح"},
+    en:{title:"GPA Calculator",subjects:"My courses",hours:"Total credit hours",count:"Courses",course:"Course name",hrs:"Hours",grade:"Grade",
+        add:"Add course",reset:"Clear all",of:"out of ",empty:"No courses yet. Add your first one to begin.",del:"Delete",
+        v:["Outstanding, keep going!","Very good","Good","Passing","Needs a push"],none:"Add your courses to see your GPA",
+        lang:"العربية",dark:"Dark",light:"Light"}
+  };
+  var S={lang:"ar",theme:null,max:4,courses:[]};
+  try{var sv=JSON.parse(localStorage.getItem("gpa2")); if(sv&&Array.isArray(sv.courses)) S=Object.assign(S,sv);}catch(e){}
+  if(!S.theme) S.theme=(window.matchMedia&&matchMedia("(prefers-color-scheme: dark)").matches)?"dark":"light";
+  if(!S.courses.length) S.courses=[{n:"",h:3,g:"A"},{n:"",h:3,g:"B+"},{n:"",h:2,g:"A+"}];
+
+  var $=function(id){return document.getElementById(id)};
+  var rowsEl=$("rows"), shown=0, raf=0;
+  function save(){try{localStorage.setItem("gpa2",JSON.stringify(S));}catch(e){}}
+  function tr(){return T[S.lang]}
+
+  function applyChrome(){
+    var t=tr(), d=document.documentElement;
+    d.lang=S.lang; d.dir=S.lang==="ar"?"rtl":"ltr"; d.setAttribute("data-theme",S.theme);
+    document.title=t.title;
+    $("t-title").textContent=t.title; $("t-subjects").textContent=t.subjects;
+    $("t-hours").textContent=t.hours; $("t-count").textContent=t.count;
+    $("c-name").textContent=t.course; $("c-hrs").textContent=t.hrs; $("c-grade").textContent=t.grade;
+    $("add").textContent="+ "+t.add; $("reset").textContent=t.reset;
+    $("lang").textContent="🌐 "+t.lang;
+    $("theme").textContent=S.theme==="dark"?"☀️ "+t.light:"🌙 "+t.dark;
+    $("outof").textContent=t.of+S.max;
+    document.querySelectorAll(".seg button").forEach(function(b){b.setAttribute("aria-pressed",String(+b.dataset.max===S.max));});
+  }
+
+  function render(){
+    var t=tr(); rowsEl.innerHTML="";
+    if(!S.courses.length){var p=document.createElement("div");p.className="empty";p.textContent=t.empty;rowsEl.appendChild(p);}
+    S.courses.forEach(function(c,i){
+      var r=document.createElement("div"); r.className="row";
+      r.style.setProperty("--gc",GC[GR.indexOf(c.g)]);
+      var n=document.createElement("input"); n.type="text"; n.placeholder=t.course; n.value=c.n; n.setAttribute("aria-label",t.course);
+      n.oninput=function(){c.n=n.value;save();};
+      var h=document.createElement("input"); h.type="number"; h.min="0"; h.max="10"; h.inputMode="numeric"; h.value=c.h; h.setAttribute("aria-label",t.hrs);
+      h.oninput=function(){c.h=h.value;calc();save();};
+      var s=document.createElement("select"); s.setAttribute("aria-label",t.grade);
+      GR.forEach(function(g){var o=document.createElement("option");o.value=g;o.textContent=g;if(g===c.g)o.selected=true;s.appendChild(o);});
+      s.onchange=function(){c.g=s.value;r.style.setProperty("--gc",GC[GR.indexOf(c.g)]);calc();save();};
+      var d=document.createElement("button"); d.type="button"; d.className="del"; d.textContent="×"; d.setAttribute("aria-label",t.del);
+      d.onclick=function(){S.courses.splice(i,1);render();calc();save();};
+      r.append(n,h,s,d); rowsEl.appendChild(r);
+    });
+  }
+
+  function countTo(v){
+    cancelAnimationFrame(raf);
+    var from=shown, reduce=matchMedia("(prefers-reduced-motion: reduce)").matches, t0=performance.now();
+    if(reduce){shown=v;$("gpa").textContent=v.toFixed(2);return;}
+    (function step(now){
+      var k=Math.min(1,(now-t0)/700), e=1-Math.pow(1-k,3);
+      shown=from+(v-from)*e; $("gpa").textContent=shown.toFixed(2);
+      if(k<1) raf=requestAnimationFrame(step); else shown=v;
+    })(t0);
+  }
+
+  function calc(){
+    var p=PT[S.max], tot=0, hrs=0, n=0;
+    S.courses.forEach(function(c){var h=parseFloat(c.h); if(isFinite(h)&&h>0){tot+=h*p[c.g];hrs+=h;n++;}});
+    var gpa=hrs?tot/hrs:0, ratio=gpa/S.max;
+    countTo(gpa);
+    $("pg").style.strokeDashoffset=565.5*(1-ratio);
+    $("hours").textContent=hrs; $("count").textContent=n;
+    var t=tr(), idx=ratio>=.9?0:ratio>=.75?1:ratio>=.6?2:ratio>=.5?3:4;
+    $("verdict").textContent=hrs?t.v[idx]:t.none;
+  }
+
+  document.querySelectorAll(".seg button").forEach(function(b){
+    b.onclick=function(){S.max=+b.dataset.max;applyChrome();calc();save();};
+  });
+  $("lang").onclick=function(){S.lang=S.lang==="ar"?"en":"ar";applyChrome();render();calc();save();};
+  $("theme").onclick=function(){S.theme=S.theme==="dark"?"light":"dark";applyChrome();save();};
+  $("add").onclick=function(){S.courses.push({n:"",h:3,g:"A"});render();calc();save();
+    var x=rowsEl.querySelectorAll("input[type=text]"); if(x.length)x[x.length-1].focus();};
+  $("reset").onclick=function(){S.courses=[];render();calc();save();};
+
+  applyChrome(); render(); setTimeout(calc,150);
+})();
+</script>
+</body>
+</html>
